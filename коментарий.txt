@@ -1,3 +1,4 @@
+//капча
 using System;
 using System.Text;
 using System.Collections.Generic;
@@ -96,18 +97,83 @@ namespace WindowsFormsApp1
         private void pictureBox1_Click(object sender, EventArgs e)
         {
         }
-     //переход
-      if(Login.Text == "admin" && pass.Text == "admin" );
-      {
-        User Shop = new User();
-        Shop.Show();
-        this.Hide();
-        MessageBox.Show("Вы успешно вошли!")
-      } 
-      eslse
-      {
-        MessageBox.Show("Вы ввели не правильный логин или пароль!");
-      }
+     
 
     }
 }
+----------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------
+
+      //кнопка все что нужно прописать 
+       private void button1_Click(object sender, EventArgs e)
+        {
+            SqlConnection sqlCon = new SqlConnection(@"Data Source=DESKTOP-MPI5QIK\SQLEXPRESS; Initial Catalog=Trade; Integrated Security=True;");
+            dataBase.openConnection();
+
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+                string query = "SELECT * FROM [User] WHERE UserLogin=@UserLogin AND UserPassword=@UserPassword";
+                SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+                sqlCmd.CommandType = CommandType.Text;
+                sqlCmd.Parameters.AddWithValue("@UserLogin", Login.Text);
+                sqlCmd.Parameters.AddWithValue("@UserPassword", pass.Text);
+                int count = Convert.ToInt32(sqlCmd.ExecuteScalar());
+                
+                if (count != 0)
+                {
+                    User Shop = new User();
+                        Shop.Show();
+                        this.Hide();
+                     MessageBox.Show("Вы успешно вошли!");
+                }
+                else
+                {
+                    Capha capcha = new Capha();
+                    capcha.Show();
+                    this.Hide();
+                    MessageBox.Show("Почта или пароль введены неверно.");
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+            finally
+            {
+                dataBase.closeConnection();
+            }
+
+            
+        }
+
+----------------------------------------------------------------------------------------------
+ public partial class Enter : Form
+    {
+        DataBase dataBase = new DataBase();//то что нужно прописать ниже формы 
+-----------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------
+ ----------------------------------------------------------------------------------------------
+//то что нужно прописать в директиву 
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Data.Common;
+using System.Data.Entity;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Asn1.X509;
+using WindowsFormsApp1;
